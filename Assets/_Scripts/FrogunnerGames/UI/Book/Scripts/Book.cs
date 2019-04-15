@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
+using FrogunnerGames.Coroutine;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -16,7 +17,6 @@ namespace FrogunnerGames.UI.Book
     public class Book : MonoBehaviour
     {
         [SerializeField] private Canvas _canvas;
-        [SerializeField] private RectTransform _background;
         [SerializeField] private RectTransform _bookTransform;
         [SerializeField] private RectTransform _clippingPanelTransform;
         [SerializeField] private RectTransform _shadowLTRTransform;
@@ -31,7 +31,6 @@ namespace FrogunnerGames.UI.Book
         [SerializeField] private int _startingPage;
         [SerializeField] private bool _interactable = true;
         [SerializeField] private bool _enableShadowEffect = true;
-        [SerializeField] private bool _firstPageOnLeft;
         [SerializeField] private RectTransform[] _bookPages;
 
         public int StartingPage => _startingPage;
@@ -131,7 +130,7 @@ namespace FrogunnerGames.UI.Book
 
             // Update starting pages
             CurrentPage = _startingPage;
-            UpdateStartingPages();
+            UpdatePages();
         }
 
         private Vector3 transformPoint(Vector3 global)
@@ -235,7 +234,6 @@ namespace FrogunnerGames.UI.Book
             float T0_CORNER_dy = bookCorner.y - t0.y;
             float T0_CORNER_dx = bookCorner.x - t0.x;
             float T0_CORNER_Angle = Mathf.Atan2(T0_CORNER_dy, T0_CORNER_dx);
-//        float T0_T1_Angle = 90 - T0_CORNER_Angle;
 
             float T1_X = t0.x - T0_CORNER_dy * Mathf.Tan(T0_CORNER_Angle);
             T1_X = normalizeT1X(T1_X, bookCorner, _spineBottom);
@@ -299,17 +297,17 @@ namespace FrogunnerGames.UI.Book
             _leftTransform.position = rightNextPosition;
             _leftTransform.eulerAngles = new Vector3(0, 0, 0);
 
-            var leftPage = (CurrentPage < _bookPages.Length) ? _bookPages[CurrentPage] : _background;
+            var leftPage = _bookPages[CurrentPage + 1];
             SetPage(leftPage, _leftTransform);
             _leftTransform.SetAsFirstSibling();
 
             _rightTransform.gameObject.SetActive(true);
             _rightTransform.position = rightNextPosition;
             _rightTransform.eulerAngles = new Vector3(0, 0, 0);
-            var rightPage = (CurrentPage < _bookPages.Length - 1) ? _bookPages[CurrentPage + 1] : _background;
+            var rightPage = _bookPages[CurrentPage + 2];
             SetPage(rightPage, _rightTransform);
 
-            var rightNextPage = (CurrentPage < _bookPages.Length - 2) ? _bookPages[CurrentPage + 2] : _background;
+            var rightNextPage = _bookPages[CurrentPage + 3];
             SetPage(rightNextPage, _rightNextTransform);
 
             _leftNextTransform.SetAsFirstSibling();
@@ -350,7 +348,7 @@ namespace FrogunnerGames.UI.Book
             var leftNextPosition = _leftNextTransform.position;
             _rightTransform.position = leftNextPosition;
 
-            var rightPage = _bookPages[CurrentPage - 1];
+            var rightPage = _bookPages[CurrentPage];
             SetPage(rightPage, _rightTransform);
 
             _rightTransform.eulerAngles = Vector3.zero;
@@ -361,10 +359,10 @@ namespace FrogunnerGames.UI.Book
             _leftTransform.position = leftNextPosition;
             _leftTransform.eulerAngles = Vector3.zero;
 
-            var leftPage = (CurrentPage >= 2) ? _bookPages[CurrentPage - 2] : _background;
+            var leftPage = _bookPages[CurrentPage - 1];
             SetPage(leftPage, _leftTransform);
 
-            var leftNextPage = (CurrentPage >= 3) ? _bookPages[CurrentPage - 3] : _background;
+            var leftNextPage = _bookPages[CurrentPage - 2];
             SetPage(leftNextPage, _leftNextTransform);
 
             _rightNextTransform.SetAsFirstSibling();
@@ -399,58 +397,32 @@ namespace FrogunnerGames.UI.Book
                 TweenForward();
         }
 
-        private RectTransform GetNextPage()
-        {
-            return null;
-        }
-
-        private RectTransform GetPreviousPage()
-        {
-            return null;
-        }
-
-        private void UpdateStartingPages()
-        {
-            if (_firstPageOnLeft)
-            {
-                _currentLeftPage = _bookPages[CurrentPage];
-                SetPage(_currentLeftPage, _leftNextTransform);
-
-                _currentRightPage = _bookPages[CurrentPage + 1];
-                SetPage(_currentRightPage, _rightNextTransform);
-            }
-            else
-            {
-                UpdatePages();
-            }
-        }
-
         private void UpdatePages()
         {
-            var leftNextPage = (CurrentPage > 0 && CurrentPage <= _bookPages.Length) ? _bookPages[CurrentPage - 1] : _background;
-            SetPage(leftNextPage, _leftNextTransform);
+            _currentLeftPage = _bookPages[CurrentPage];
+            SetPage(_currentLeftPage, _leftNextTransform);
 
-            var rightNextPage = (CurrentPage >= 0 && CurrentPage < _bookPages.Length) ? _bookPages[CurrentPage] : _background;
-            SetPage(rightNextPage, _rightNextTransform);
+            _currentRightPage = _bookPages[CurrentPage + 1];
+            SetPage(_currentRightPage, _rightNextTransform);
         }
 
         private void TweenForward()
         {
             if (mode == FlipMode.RightToLeft)
-                StartCoroutine(TweenTo(_edgeBottomLeft, 0.15f, Flip));
+                Timing.RunCoroutine(TweenTo(_edgeBottomLeft, 0.15f, Flip));
             else
-                StartCoroutine(TweenTo(_edgeBottomRight, 0.15f, Flip));
+                Timing.RunCoroutine(TweenTo(_edgeBottomRight, 0.15f, Flip));
         }
 
         private void Flip()
         {
             if (mode == FlipMode.RightToLeft)
-                CurrentPage = Mathf.Clamp(CurrentPage + 2, 0, TotalPageCount);
+                CurrentPage = Mathf.Clamp(CurrentPage + 2, 0, TotalPageCount - 1);
             else
-                CurrentPage = Mathf.Clamp(CurrentPage - 2, 0, TotalPageCount);
+                CurrentPage = Mathf.Clamp(CurrentPage - 2, 0, TotalPageCount - 1);
 
-            _rightHotspot.enabled = CurrentPage != TotalPageCount - 1;
-            _leftHotspot.enabled = CurrentPage != 0;
+            _rightHotspot.enabled = CurrentPage < TotalPageCount - 3;
+            _leftHotspot.enabled = CurrentPage > 0;
 
             _leftNextTransform.SetParent(_bookTransform, true);
             _leftTransform.SetParent(_bookTransform, true);
@@ -471,7 +443,7 @@ namespace FrogunnerGames.UI.Book
         {
             if (mode == FlipMode.RightToLeft)
             {
-                StartCoroutine(TweenTo(_edgeBottomRight, 0.15f,
+                Timing.RunCoroutine(TweenTo(_edgeBottomRight, 0.15f,
                     () =>
                     {
                         UpdatePages();
@@ -487,7 +459,7 @@ namespace FrogunnerGames.UI.Book
             }
             else
             {
-                StartCoroutine(TweenTo(_edgeBottomLeft, 0.15f,
+                Timing.RunCoroutine(TweenTo(_edgeBottomLeft, 0.15f,
                     () =>
                     {
                         UpdatePages();
@@ -504,7 +476,7 @@ namespace FrogunnerGames.UI.Book
             }
         }
 
-        private IEnumerator TweenTo(Vector3 to, float duration, Action onFinish)
+        private IEnumerator<float> TweenTo(Vector3 to, float duration, Action onFinish)
         {
             int steps = (int) (duration / 0.025f);
             Vector3 displacement = (to - _followPoint) / steps;
@@ -516,7 +488,7 @@ namespace FrogunnerGames.UI.Book
                 else
                     UpdateBookLTRToPoint(_followPoint + displacement);
 
-                yield return new WaitForSeconds(0.025f);
+                yield return Timing.WaitForSeconds(0.025f);
             }
 
             onFinish?.Invoke();

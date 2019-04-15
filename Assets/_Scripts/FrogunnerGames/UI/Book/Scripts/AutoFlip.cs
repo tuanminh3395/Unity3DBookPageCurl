@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
+using FrogunnerGames.Coroutine;
 using UnityEngine;
 
 namespace FrogunnerGames.UI.Book
@@ -64,9 +65,9 @@ namespace FrogunnerGames.UI.Book
             StartCoroutine(FlipLTR(xc, xl, h, frameTime, dx));
         }
 
-        private IEnumerator FlipToEnd()
+        private IEnumerator<float> FlipToEnd()
         {
-            yield return new WaitForSeconds(DelayBeforeStarting);
+            yield return Timing.WaitForSeconds(DelayBeforeStarting);
             float frameTime = PageFlipTime / AnimationFramesCount;
             float xc = (ControledBook.EndBottomRight.x + ControledBook.EndBottomLeft.x) / 2;
             float xl = ((ControledBook.EndBottomRight.x - ControledBook.EndBottomLeft.x) / 2) * 0.9f;
@@ -93,7 +94,7 @@ namespace FrogunnerGames.UI.Book
                     while (ControledBook.CurrentPage < ControledBook.TotalPageCount)
                     {
                         StartCoroutine(FlipRTL(xc, xl, h, frameTime, dx));
-                        yield return new WaitForSeconds(TimeBetweenPages);
+                        yield return Timing.WaitForSeconds(TimeBetweenPages);
                     }
 
                     break;
@@ -101,42 +102,14 @@ namespace FrogunnerGames.UI.Book
                     while (ControledBook.CurrentPage > 0)
                     {
                         StartCoroutine(FlipLTR(xc, xl, h, frameTime, dx));
-                        yield return new WaitForSeconds(TimeBetweenPages);
+                        yield return Timing.WaitForSeconds(TimeBetweenPages);
                     }
 
                     break;
             }
         }
 
-        private IEnumerator InitialFlip()
-        {
-            yield return new WaitForSeconds(DelayBeforeStarting);
-            float frameTime = PageFlipTime / AnimationFramesCount;
-            float xc = (ControledBook.EndBottomRight.x + ControledBook.EndBottomLeft.x) / 2;
-            float xl = ((ControledBook.EndBottomRight.x - ControledBook.EndBottomLeft.x) / 2) * 0.9f;
-            //float h =  ControledBook.Height * 0.5f;
-            float h = Mathf.Abs(ControledBook.EndBottomRight.y) * 0.9f;
-            float dx = (xl) * 2 / AnimationFramesCount;
-
-            if (ControledBook.StartingPage > ControledBook.CurrentPage)
-                while (ControledBook.CurrentPage < ControledBook.TotalPageCount)
-                {
-                    {
-                        StartCoroutine(FlipRTL(xc, xl, h, frameTime, dx));
-                        yield return new WaitForSeconds(TimeBetweenPages);
-                    }
-                }
-            else if (ControledBook.StartingPage < ControledBook.CurrentPage)
-            {
-                while (ControledBook.CurrentPage > 0)
-                {
-                    StartCoroutine(FlipLTR(xc, xl, h, frameTime, dx));
-                    yield return new WaitForSeconds(TimeBetweenPages);
-                }
-            }
-        }
-
-        private IEnumerator FlipRTL(float xc, float xl, float h, float frameTime, float dx)
+        private IEnumerator<float> FlipRTL(float xc, float xl, float h, float frameTime, float dx)
         {
             float x = xc + xl;
             float y = (-h / (xl * xl)) * (x - xc) * (x - xc);
@@ -147,14 +120,14 @@ namespace FrogunnerGames.UI.Book
             {
                 y = (-h / (xl * xl)) * (x - xc) * (x - xc);
                 ControledBook.UpdateBookRTLToPoint(new Vector3(x, y, 0));
-                yield return new WaitForSeconds(frameTime);
+                yield return Timing.WaitForSeconds(frameTime);
                 x -= dx;
             }
 
             ControledBook.ReleasePage();
         }
 
-        private IEnumerator FlipLTR(float xc, float xl, float h, float frameTime, float dx)
+        private IEnumerator<float> FlipLTR(float xc, float xl, float h, float frameTime, float dx)
         {
             float x = xc - xl;
             float y = (-h / (xl * xl)) * (x - xc) * (x - xc);
@@ -165,7 +138,7 @@ namespace FrogunnerGames.UI.Book
             {
                 y = (-h / (xl * xl)) * (x - xc) * (x - xc);
                 ControledBook.UpdateBookLTRToPoint(new Vector3(x, y, 0));
-                yield return new WaitForSeconds(frameTime);
+                yield return Timing.WaitForSeconds(frameTime);
                 x += dx;
             }
 

@@ -1,7 +1,8 @@
 fileFormatVersion: 2
-guid: 2444b4bb84b9adb468761c9b39ab26d4
+guid: 6a1d24eaf8acf424b83ac09a9bedf40e
+labels:
+- singleton
 MonoImporter:
-  externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
   executionOrder: 0

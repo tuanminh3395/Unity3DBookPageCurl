@@ -785,7 +785,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvas: {fileID: 6428106181756749741}
-  _background: {fileID: 1443992865}
   _bookTransform: {fileID: 22443772}
   _clippingPanelTransform: {fileID: 22436914}
   _shadowLTRTransform: {fileID: 22433904}
@@ -798,13 +797,15 @@ MonoBehaviour:
   _rightHotspot: {fileID: 11493664}
   _leftHotspot: {fileID: 11486412}
   _startingPage: 0
-  bookPages:
+  _interactable: 1
+  _enableShadowEffect: 1
+  _bookPages:
+  - {fileID: 1443992865}
   - {fileID: 728201452}
   - {fileID: 260096061}
   - {fileID: 1005084991}
   - {fileID: 1139630100}
-  interactable: 1
-  enableShadowEffect: 1
+  - {fileID: 1443992865}
   OnFlip:
     m_PersistentCalls:
       m_Calls: []

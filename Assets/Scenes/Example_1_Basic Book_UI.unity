@@ -112,12 +112,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!224 &134418772 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 260096061, guid: fe9bfb5044c0cc646baba1ad7d354100,
-    type: 3}
-  m_PrefabInstance: {fileID: 379377900}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &379377900
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -213,48 +207,8 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _bookPages.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _bookPages.Array.data[0]
-      value: 
-      objectReference: {fileID: 707496035}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _bookPages.Array.data[1]
-      value: 
-      objectReference: {fileID: 134418772}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _bookPages.Array.data[2]
-      value: 
-      objectReference: {fileID: 2067315827}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _bookPages.Array.data[3]
-      value: 
-      objectReference: {fileID: 539645905}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _firstPageOnLeft
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11415212, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
-      propertyPath: _startingPage
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe9bfb5044c0cc646baba1ad7d354100, type: 3}
---- !u!224 &539645905 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1139630100, guid: fe9bfb5044c0cc646baba1ad7d354100,
-    type: 3}
-  m_PrefabInstance: {fileID: 379377900}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &707496035 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 728201452, guid: fe9bfb5044c0cc646baba1ad7d354100,
-    type: 3}
-  m_PrefabInstance: {fileID: 379377900}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &775422200
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,12 +469,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008264225}
   m_CullTransparentMesh: 0
---- !u!224 &2067315827 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1005084991, guid: fe9bfb5044c0cc646baba1ad7d354100,
-    type: 3}
-  m_PrefabInstance: {fileID: 379377900}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2073085176
 GameObject:
   m_ObjectHideFlags: 0
